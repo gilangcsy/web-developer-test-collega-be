@@ -29,6 +29,9 @@ cd <project_name>
 npm install
 ```
 - Create an .env file and adjust it as in the Environment Variables section. For database credentials, please adjust to the server you are using.
+```
+cp .env.example .env
+```
 - Don't forget to create a database with the same name as the environment variable DB_NAME
 - Build and run the project
 ```
