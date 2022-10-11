@@ -22,14 +22,18 @@ module.exports = {
                 const validatedPassword = bcrypt.compareSync(password, userData.password) // true
                 if (validatedPassword) {
                     const tokenJwt = jwt.sign({ id: userData.id, email: userData.email }, process.env.APP_SECRET_KEY, {
-                        expiresIn: 10800 // 3 hours
+                        expiresIn: 3600 // Second or 1 hour
                     })
-                    // let trimTokenJwt = tokenJwt.trim()
-                    // const _token = trimTokenJwt.split(' ')[1] // extract from bearer
+                    const _token = JSON.parse(Buffer.from(tokenJwt.split('.')[1], 'base64').toString())
                     res.status(201).json({
                         success: true,
                         message: 'Login has been success',
-                        token: tokenJwt
+                        credentials: {
+                            token: tokenJwt,
+                            id: userData.id,
+                            email: userData.email,
+                            expiredAt: _token.exp
+                        }
                     })
                 } else {
                     res.status(400).json({
@@ -54,7 +58,6 @@ module.exports = {
             const { jwtToken } = req.body
             
             const _token = JSON.parse(Buffer.from(jwtToken.split('.')[1], 'base64').toString())
-            console.log(_token.exp)
 
             const data = {
                 token: jwtToken,
@@ -66,6 +69,27 @@ module.exports = {
             res.status(200).send({
                 success: true,
                 message: 'Logout has been success.'
+            })
+        } catch (err) {
+            next(err)
+        }
+    },
+
+    async checkToken(req, res, next) {
+        try {
+            const { token } = req.body
+            
+            jwt.verify(token, process.env.APP_SECRET_KEY, (err, decoded) => {
+                if (err) {
+                    return res.status(401).send({
+                        success: false,
+                        message: 'Unauthorized!'
+                    });
+                }
+                return res.status(200).send({
+                    success: true,
+                    message: 'Token valid.'
+                });
             })
         } catch (err) {
             next(err)
