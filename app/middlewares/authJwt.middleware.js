@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
-const config = require('../configs/auth.config');
-const db = require('../models');
+require('dotenv').config()
+const jwt = require('jsonwebtoken')
+const config = require('../configs/auth.config')
 
 verifyToken = (req, res, next) => {
-    let token = req.headers["x-access-token"];
+    let token = req.headers['x-access-token'];
 
     if (!token) {
         return res.status(403).send({
@@ -11,7 +11,7 @@ verifyToken = (req, res, next) => {
         });
     }
 
-    jwt.verify(token, config.secret, (err, decoded) => {
+    jwt.verify(token, process.env.APP_SECRET_KEY, (err, decoded) => {
         if (err) {
             return res.status(401).send({
                 message: 'Unauthorized!'

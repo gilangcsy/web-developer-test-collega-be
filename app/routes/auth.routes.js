@@ -1,15 +1,12 @@
-const controller = require('../controllers/auth.controller');
-const API = require('../configs/db.config');
+require('dotenv').config()
+const controller = require('../controllers/auth.controller')
 
 module.exports = app => {
 
-	let router = require('express').Router();
+	let router = require('express').Router()
 
-	router.post('/invitation/checkToken', controller.expiredCheck);
-	router.post('/invitation/invite', controller.invite);
-	router.post('/login', controller.login);
-	router.post('/logout', controller.logout);
-	router.patch('/invitation/accepting', controller.acceptingInvitation);
+	router.post('/login', controller.login)
+	router.post('/logout', controller.logout)
 
-	app.use(`${API.VERSION}/auth/`, router);
+	app.use(`${process.env.APP_VERSION}/auth`, router)
 }
