@@ -5,13 +5,13 @@ This project uses the following environment variables:
 
 | Name                          | Description                         | Value                                  |
 | ----------------------------- | ------------------------------------| -----------------------------------------------|
-|APP_PORT           | PORT used to run the server           | "3001"      |
-|APP_VERSION          | Currently running API version          | "/v1"      |
-|APP_SECRET_KEY          | Secret key for JWT         | "jwt-secret-key"      |
-|DB_HOST          | HOST name of the server that we used         | "localhost"      |
-|DB_USER          | USER name of the server  that we used         | "postgres"      |
-|DB_PASSWORD          | PASSWORD of the server that we used       | "postgres"      |
-|DB_NAME          | Database name        | "collega"      |
+|APP_PORT           | PORT used to run the server           | 3001      |
+|APP_VERSION          | Currently running API version          | /v1      |
+|APP_SECRET_KEY          | Secret key for JWT         | jwt-secret-key      |
+|DB_HOST          | HOST name of the server that we used         | localhost      |
+|DB_USER          | USER name of the server  that we used         | postgres      |
+|DB_PASSWORD          | PASSWORD of the server that we used       | postgres      |
+|DB_NAME          | Database name        | collega      |
 
 
 # Pre-requisites
@@ -29,6 +29,7 @@ cd <project_name>
 npm install
 ```
 - Create an .env file and adjust it as in the Environment Variables section. For database credentials, please adjust to the server you are using.
+- Don't forget to create a database with the same name as the environment variable DB_NAME
 - Build and run the project
 ```
 npm start
