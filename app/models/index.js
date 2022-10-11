@@ -23,5 +23,6 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.user = require('./user.model')(sequelize, Sequelize)
+db.expiredToken = require('./expiredToken.model')(sequelize, Sequelize)
 
 module.exports = db;

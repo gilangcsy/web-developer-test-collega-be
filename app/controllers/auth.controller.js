@@ -2,6 +2,7 @@ require('dotenv').config()
 const db = require('../models')
 const jwt = require('jsonwebtoken')
 const User = db.user
+const Expired = db.expiredToken
 
 const bcrypt = require('bcrypt');
 const e = require('express')
@@ -23,12 +24,12 @@ module.exports = {
                     const tokenJwt = jwt.sign({ id: userData.id, email: userData.email }, process.env.APP_SECRET_KEY, {
                         expiresIn: 10800 // 3 hours
                     })
-                    let trimTokenJwt = tokenJwt.trim()
-                    const _token = trimTokenJwt.split(' ')[1] // extract from bearer
+                    // let trimTokenJwt = tokenJwt.trim()
+                    // const _token = trimTokenJwt.split(' ')[1] // extract from bearer
                     res.status(201).json({
                         success: true,
                         message: 'Login has been success',
-                        token: trimTokenJwt
+                        token: tokenJwt
                     })
                 } else {
                     res.status(400).json({
@@ -51,16 +52,21 @@ module.exports = {
     async logout(req, res, next) {
         try {
             const { jwtToken } = req.body
-            jwt.sign(jwtToken, "", { expiresIn: 1 }, (logout, err) => {
-                if (logout) {
-                    res.status(200).send({
-                        success: true,
-                        message: 'Logout has been success.'
-                    });
-                } else {
-                    res.send({ msg: err.message | 'Error' });
-                }
-            });
+            
+            const _token = JSON.parse(Buffer.from(jwtToken.split('.')[1], 'base64').toString())
+            console.log(_token.exp)
+
+            const data = {
+                token: jwtToken,
+                expired_at: _token.exp
+            }
+
+            await Expired.create(data)
+            
+            res.status(200).send({
+                success: true,
+                message: 'Logout has been success.'
+            })
         } catch (err) {
             next(err)
         }
